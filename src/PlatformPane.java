@@ -28,11 +28,11 @@ public class PlatformPane extends Pane {
         for (int i = 0; i <= NUM_STATIONARY_PLATFORMS; i++) {
             int direction = ran.nextInt(2);
             if (direction == 0) {
-                platformX = platformX - ran.nextInt(50) - 100; // moves left 75-100
+                platformX = platformX - ran.nextInt(50) - 100; // moves left 50-100
             } else if (direction == 1) {
-                platformX = platformX + ran.nextInt(50) + 100; // moves right 75-100
+                platformX = platformX + ran.nextInt(50) + 50; // moves right 50-100
             }
-            if (platformX >= PANE_WIDTH) {
+            if (platformX + PLATFORM_WIDTH >= PANE_WIDTH) {
                 platformX = PANE_WIDTH - PLATFORM_WIDTH;
             } else if (platformX < 0) {
                 platformX = 0;
@@ -58,5 +58,13 @@ public class PlatformPane extends Pane {
         }
         // for loop for other types of platforms
         return result;
+    }
+
+    public void scroll(double scrollAmount) {
+        // move each platform up by the given amount
+        for (Rectangle stationaryPlatform : stationaryPlatforms) {
+            stationaryPlatform.setY(stationaryPlatform.getY() - scrollAmount);
+            // subtracting since scrollAmount will be negative
+        }
     }
 }

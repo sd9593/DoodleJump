@@ -47,7 +47,13 @@ public class GamePane extends Pane {
     public void fall() {
         velocity = velocity + GRAVITY * DURATION;
         doodleY = doodleY + velocity * DURATION;
-        doodle.setY(doodleY);
+        if (doodleY < getHeight() / 2) {
+            doodle.setY(getHeight() / 2);
+            platformPane.scroll(doodleY - getHeight() / 2);
+            doodleY = getHeight() / 2;
+        } else {
+            doodle.setY(doodleY);
+        }
     }
 
     public void jump() {
