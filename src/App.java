@@ -3,6 +3,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -25,11 +26,21 @@ public class App extends Application {
             System.exit(0);
         });
 
+        gamePane.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                gamePane.play();
+            } else if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.RIGHT) {
+                gamePane.moveDoodle(e);
+            }
+        });
+
         Scene scene = new Scene(borderPane, 1000, 700);
         myStage.setScene(scene);
         myStage.setTitle("Doodle jump");
         myStage.show();
         myStage.setResizable(false);
+
+        gamePane.requestFocus(); // allows KeyPressed event to fire
     }
 
     public static void main(String[] args) throws Exception {
