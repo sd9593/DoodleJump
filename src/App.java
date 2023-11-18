@@ -22,9 +22,7 @@ public class App extends Application {
         borderPane.setAlignment(quit, Pos.CENTER);
         borderPane.setBottom(quit);
 
-        quit.setOnAction((ActionEvent e) -> {
-            System.exit(0);
-        });
+        quit.setOnAction((ActionEvent e) -> System.exit(0));
 
         gamePane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -34,7 +32,7 @@ public class App extends Application {
             }
         });
 
-        Scene scene = new Scene(borderPane, 1000, 700);
+        Scene scene = new Scene(borderPane, 500, 700);
         myStage.setScene(scene);
         myStage.setTitle("Doodle jump");
         myStage.show();

@@ -7,10 +7,12 @@ import javafx.scene.shape.Rectangle;
 public class PlatformPane extends Pane {
     private ArrayList<Rectangle> stationaryPlatforms = new ArrayList<>();
 
+    private static final int PANE_WIDTH = 500;
+
     // universal platform properties
     private static final double PLATFORM_WIDTH = 50;
     private static final double PLATFORM_HEIGHT = 10;
-    private double platformX = 500;
+    private double platformX = 250;
     private double platformY = 600;
 
     // to be used to determine new platform position
@@ -26,12 +28,16 @@ public class PlatformPane extends Pane {
         for (int i = 0; i <= NUM_STATIONARY_PLATFORMS; i++) {
             int direction = ran.nextInt(2);
             if (direction == 0) {
-                platformX = platformX - 100;
+                platformX = platformX - ran.nextInt(50) - 100; // moves left 75-100
             } else if (direction == 1) {
-                platformX = platformX + 100;
+                platformX = platformX + ran.nextInt(50) + 100; // moves right 75-100
             }
-            // TODO what if off screen
-            platformY = platformY - ran.nextInt(100) - 50;
+            if (platformX >= PANE_WIDTH) {
+                platformX = PANE_WIDTH - PLATFORM_WIDTH;
+            } else if (platformX < 0) {
+                platformX = 0;
+            }
+            platformY = platformY - ran.nextInt(50) - 25;
             Rectangle stationaryPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
             getChildren().add(stationaryPlatform);
             stationaryPlatforms.add(stationaryPlatform);

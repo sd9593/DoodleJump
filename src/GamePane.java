@@ -12,7 +12,7 @@ public class GamePane extends Pane {
 
     // doodle attributes
     private Rectangle doodle;
-    private double doodleX = 500;
+    private double doodleX = 250;
     private double doodleY = 400;
     private static final int DOODLE_WIDTH = 20;
     private static final int DOODLE_HEIGHT = 30;
@@ -67,10 +67,11 @@ public class GamePane extends Pane {
         } else if (e.getCode() == KeyCode.RIGHT) {
             // wrap around to left if doodle goes off screen
             if (doodleX + DOODLE_WIDTH >= getWidth()) {
-                doodleX = 0 - DOODLE_WIDTH;
+                doodleX = 0.0 - DOODLE_WIDTH;
             }
             doodleX += speed;
         }
         doodle.setX(doodleX);
     }
+
 }
