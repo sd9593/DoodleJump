@@ -13,7 +13,7 @@ public class GamePane extends Pane {
     // doodle attributes
     private Rectangle doodle;
     private double doodleX = 500;
-    private double doodleY = 600;
+    private double doodleY = 400;
     private static final int DOODLE_WIDTH = 20;
     private static final int DOODLE_HEIGHT = 30;
     private double speed = 20;
@@ -21,15 +21,20 @@ public class GamePane extends Pane {
     // attributes for falling animation
     private static final int GRAVITY = 100;
     private static final double DURATION = 0.015;
+    private static final double REVERSE_VELOCITY = -250;
     private double velocity = 0;
 
     Timeline doodleAnimation;
+    PlatformPane platformPane = new PlatformPane();
 
     public GamePane() {
         doodle = new Rectangle(doodleX, doodleY, DOODLE_WIDTH, DOODLE_HEIGHT);
         doodle.setFill(Color.GREEN);
-        getChildren().add(doodle);
-        doodleAnimation = new Timeline(new KeyFrame(new Duration(DURATION * GRAVITY * 10), e -> fall()));
+        getChildren().addAll(doodle, platformPane);
+        doodleAnimation = new Timeline(new KeyFrame(new Duration(DURATION * GRAVITY * 10), e -> {
+            fall();
+            jump();
+        }));
         // DURTION * GRAVITY * 10 allows better speed for falling
         doodleAnimation.setCycleCount(Timeline.INDEFINITE);
     }
@@ -46,8 +51,10 @@ public class GamePane extends Pane {
     }
 
     public void jump() {
-        doodleY += 10;
-        doodle.setY(doodleY);
+        if (platformPane.intersects(doodle)) {
+            // bounces doodle back upwards
+            velocity = REVERSE_VELOCITY;
+        }
     }
 
     public void moveDoodle(KeyEvent e) {
