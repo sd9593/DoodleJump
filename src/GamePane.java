@@ -21,7 +21,7 @@ public class GamePane extends Pane {
     // attributes for falling animation
     private static final int GRAVITY = 100;
     private static final double DURATION = 0.015;
-    private static final double REVERSE_VELOCITY = -250;
+    private static final double REVERSE_VELOCITY = -200;
     private double velocity = 0;
 
     Timeline doodleAnimation;
@@ -51,7 +51,7 @@ public class GamePane extends Pane {
     }
 
     public void jump() {
-        if (platformPane.intersects(doodle)) {
+        if (platformPane.intersects(doodle) && velocity > 0) {
             // bounces doodle back upwards
             velocity = REVERSE_VELOCITY;
         }
