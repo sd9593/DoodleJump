@@ -21,13 +21,16 @@ public class PlatformPane extends Pane {
     private double platformY = 600;
 
     // determines x value of most recently generated platform
-    double previousX = platformX;
+    private double previousX = platformX;
+
+    // determines how fast to move moving platforms
+    private double speed = 20;
 
     // to be used to determine new platform position
-    Random ran = new Random();
+    private Random ran = new Random();
 
     // stationary platform attributes
-    private static final int NUM_PLATFORMS = 20;
+    private static final int NUM_PLATFORMS = 10;
 
     public PlatformPane() {
         Rectangle initialStationaryPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
@@ -45,7 +48,7 @@ public class PlatformPane extends Pane {
             case 1:
                 previousX = makeDisappearingPlatform(previousX);
             default:
-                previousX = makeStationaryPlatform(previousX);
+                previousX = makeMovingPlatform(previousX);
         }
     }
 
@@ -66,6 +69,36 @@ public class PlatformPane extends Pane {
         disappearingPlatforms.add(disappearingPlatform);
         disappearingPlatform.setFill(Color.RED);
         return platformX;
+    }
+
+    public double makeMovingPlatform(double previousX) {
+        platformX = previousX;
+        platformY = platformY - ran.nextInt(50) - 25;
+        Rectangle movingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+        getChildren().add(movingPlatform);
+        movingPlatforms.add(movingPlatform);
+        movingPlatform.setFill(Color.GREEN);
+        return platformX;
+    }
+
+    public void movePlatforms() {
+
+        // for (Rectangle movingPlatform : movingPlatforms) {
+        // // movingPlatform.setX(movingPlatform.getX() + speed);
+
+        // // if (ran.nextInt(2) == 0) {
+        // // movingPlatform.setX(movingPlatform.getX() + speed);
+        // // } else {
+        // // movingPlatform.setX(movingPlatform.getX() - speed);
+        // // }
+
+        // // if (movingPlatform.getX() <= 0) {
+        // // movingPlatform.setX(movingPlatform.getX() + speed);
+        // // }
+        // // if (movingPlatform.getX() + PLATFORM_WIDTH > PANE_WIDTH) {
+        // // movingPlatform.setX(movingPlatform.getX() - speed);
+        // // }
+        // }
     }
 
     public double generatePlatformX(double previousX) {
@@ -108,6 +141,17 @@ public class PlatformPane extends Pane {
                 }
             }
         }
+        for (Rectangle movingPlatform : movingPlatforms) {
+            if (movingPlatform.intersects(doodle.getBoundsInLocal())) {
+                if (doodle.getX() >= movingPlatform.getX() - doodle.getWidth()
+                        && doodle.getX() <= movingPlatform.getX() +
+                                PLATFORM_WIDTH
+                        && doodle.getY() >= movingPlatform.getY() - 4 * PLATFORM_HEIGHT) {
+                    // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
+                    return true;
+                }
+            }
+        }
         // for loop for other types of platforms
         return false;
     }
@@ -129,6 +173,15 @@ public class PlatformPane extends Pane {
             if (disappearingPlatform.getY() > PANE_HEIGHT) {
                 getChildren().remove(disappearingPlatform);
                 disappearingPlatforms.remove(disappearingPlatform);
+                generatePlatforms();
+            }
+        }
+        for (Rectangle movingPlatform : movingPlatforms) {
+            movingPlatform.setY(movingPlatform.getY() - scrollAmount);
+            // subtracting since scrollAmount will be negative
+            if (movingPlatform.getY() > PANE_HEIGHT) {
+                getChildren().remove(movingPlatform);
+                movingPlatforms.remove(movingPlatform);
                 generatePlatforms();
             }
         }
