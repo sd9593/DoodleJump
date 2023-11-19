@@ -57,7 +57,7 @@ public class GamePane extends Pane {
     }
 
     public void jump() {
-        if (platformPane.intersects(doodle) && velocity > 0) {
+        if (velocity > 0 && platformPane.intersects(doodle)) {
             // bounces doodle back upwards
             velocity = REVERSE_VELOCITY;
         }
