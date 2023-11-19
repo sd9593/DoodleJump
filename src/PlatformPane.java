@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,6 +21,9 @@ public class PlatformPane extends Pane {
     private static final double PLATFORM_HEIGHT = 10;
     private double platformX = 250;
     private double platformY = 600;
+
+    // Property type allows for binding for display
+    IntegerProperty scoreProperty = new SimpleIntegerProperty();
 
     // determines x value of most recently generated platform
     private double previousX = platformX;
@@ -164,6 +169,7 @@ public class PlatformPane extends Pane {
             if (stationaryPlatform.getY() > PANE_HEIGHT) {
                 getChildren().remove(stationaryPlatform);
                 stationaryPlatforms.remove(stationaryPlatform);
+                scoreProperty.setValue(scoreProperty.getValue() + 2);
                 generatePlatforms();
             }
         }
@@ -173,6 +179,7 @@ public class PlatformPane extends Pane {
             if (disappearingPlatform.getY() > PANE_HEIGHT) {
                 getChildren().remove(disappearingPlatform);
                 disappearingPlatforms.remove(disappearingPlatform);
+                scoreProperty.setValue(scoreProperty.getValue() + 2);
                 generatePlatforms();
             }
         }
@@ -182,8 +189,13 @@ public class PlatformPane extends Pane {
             if (movingPlatform.getY() > PANE_HEIGHT) {
                 getChildren().remove(movingPlatform);
                 movingPlatforms.remove(movingPlatform);
+                scoreProperty.setValue(scoreProperty.getValue() + 1);
                 generatePlatforms();
             }
         }
+    }
+
+    public IntegerProperty getScoreProperty() {
+        return scoreProperty;
     }
 }

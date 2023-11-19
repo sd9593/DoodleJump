@@ -1,6 +1,7 @@
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -81,4 +82,7 @@ public class GamePane extends Pane {
         doodle.setX(doodleX);
     }
 
+    public IntegerProperty getScoreProperty() {
+        return platformPane.getScoreProperty();
+    }
 }
