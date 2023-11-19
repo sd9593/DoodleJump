@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 public class GamePane extends Pane {
 
@@ -68,9 +69,16 @@ public class GamePane extends Pane {
     }
 
     public void jump() {
-        if (velocity > 0 && platformPane.intersects(doodle)) {
-            // bounces doodle back upwards
-            velocity = REVERSE_VELOCITY;
+        if (velocity > 0) {
+            Pair<Boolean, Boolean> result = platformPane.intersects(doodle);
+            if (result.getKey()) {
+                // bounces doodle back upwards
+                velocity = REVERSE_VELOCITY;
+                if (result.getValue()) {
+                    // double bounce if bouncyPlatform
+                    velocity = REVERSE_VELOCITY * 2;
+                }
+            }
         }
     }
 

@@ -7,11 +7,13 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Pair;
 
 public class PlatformPane extends Pane {
     private ArrayList<Rectangle> stationaryPlatforms = new ArrayList<>();
     private ArrayList<Rectangle> disappearingPlatforms = new ArrayList<>();
     private ArrayList<Rectangle> movingPlatforms = new ArrayList<>();
+    private ArrayList<Rectangle> bouncyPlatforms = new ArrayList<>();
 
     private static final int PANE_WIDTH = 500;
     private static final int PANE_HEIGHT = 700;
@@ -47,11 +49,13 @@ public class PlatformPane extends Pane {
     }
 
     public void generatePlatforms() {
-        switch (ran.nextInt(1)) {
+        switch (ran.nextInt(4)) {
             case 0:
                 previousX = makeStationaryPlatform(previousX);
             case 1:
                 previousX = makeDisappearingPlatform(previousX);
+            case 2:
+                previousX = makeBouncyPlatform(previousX);
             default:
                 previousX = makeMovingPlatform(previousX);
         }
@@ -77,12 +81,22 @@ public class PlatformPane extends Pane {
     }
 
     public double makeMovingPlatform(double previousX) {
-        platformX = previousX;
+        platformX = generatePlatformX(previousX);
         platformY = platformY - ran.nextInt(50) - 25;
         Rectangle movingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
         getChildren().add(movingPlatform);
         movingPlatforms.add(movingPlatform);
-        movingPlatform.setFill(Color.GREEN);
+        movingPlatform.setFill(Color.BLUE);
+        return platformX;
+    }
+
+    public double makeBouncyPlatform(double previousX) {
+        platformX = generatePlatformX(previousX);
+        platformY = platformY - ran.nextInt(50) - 25;
+        Rectangle bouncyPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+        getChildren().add(bouncyPlatform);
+        bouncyPlatforms.add(bouncyPlatform);
+        bouncyPlatform.setFill(Color.GREEN);
         return platformX;
     }
 
@@ -121,7 +135,8 @@ public class PlatformPane extends Pane {
         return platformX;
     }
 
-    public boolean intersects(Rectangle doodle) {
+    // pair is intersected, extraBounce
+    public Pair<Boolean, Boolean> intersects(Rectangle doodle) {
         for (Rectangle disappearingPlatform : disappearingPlatforms) {
             if (disappearingPlatform.intersects(doodle.getBoundsInLocal())) {
                 if (doodle.getX() >= disappearingPlatform.getX() - doodle.getWidth()
@@ -131,7 +146,7 @@ public class PlatformPane extends Pane {
                     // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
                     getChildren().remove(disappearingPlatform);
                     disappearingPlatforms.remove(disappearingPlatform);
-                    return true;
+                    return new Pair(true, false);
                 }
             }
         }
@@ -142,7 +157,7 @@ public class PlatformPane extends Pane {
                                 PLATFORM_WIDTH
                         && doodle.getY() >= stationaryPlatform.getY() - 4 * PLATFORM_HEIGHT) {
                     // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
-                    return true;
+                    return new Pair(true, false);
                 }
             }
         }
@@ -153,12 +168,22 @@ public class PlatformPane extends Pane {
                                 PLATFORM_WIDTH
                         && doodle.getY() >= movingPlatform.getY() - 4 * PLATFORM_HEIGHT) {
                     // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
-                    return true;
+                    return new Pair(true, false);
                 }
             }
         }
-        // for loop for other types of platforms
-        return false;
+        for (Rectangle bouncyPlatform : bouncyPlatforms) {
+            if (bouncyPlatform.intersects(doodle.getBoundsInLocal())) {
+                if (doodle.getX() >= bouncyPlatform.getX() - doodle.getWidth()
+                        && doodle.getX() <= bouncyPlatform.getX() +
+                                PLATFORM_WIDTH
+                        && doodle.getY() >= bouncyPlatform.getY() - 4 * PLATFORM_HEIGHT) {
+                    // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
+                    return new Pair(true, true);
+                }
+            }
+        }
+        return new Pair(false, false);
     }
 
     public void scroll(double scrollAmount) {
@@ -189,6 +214,16 @@ public class PlatformPane extends Pane {
             if (movingPlatform.getY() > PANE_HEIGHT) {
                 getChildren().remove(movingPlatform);
                 movingPlatforms.remove(movingPlatform);
+                scoreProperty.setValue(scoreProperty.getValue() + 1);
+                generatePlatforms();
+            }
+        }
+        for (Rectangle bouncyPlatform : bouncyPlatforms) {
+            bouncyPlatform.setY(bouncyPlatform.getY() - scrollAmount);
+            // subtracting since scrollAmount will be negative
+            if (bouncyPlatform.getY() > PANE_HEIGHT) {
+                getChildren().remove(bouncyPlatform);
+                bouncyPlatforms.remove(bouncyPlatform);
                 scoreProperty.setValue(scoreProperty.getValue() + 1);
                 generatePlatforms();
             }
