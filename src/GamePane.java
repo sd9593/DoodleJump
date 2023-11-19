@@ -25,7 +25,7 @@ public class GamePane extends Pane {
     // attributes for falling animation
     private static final int GRAVITY = 100;
     private static final double DURATION = 0.015;
-    private static final double REVERSE_VELOCITY = -200;
+    private static final double REVERSE_VELOCITY = -150;
     private double velocity = 0;
 
     Timeline doodleAnimation;
@@ -76,7 +76,7 @@ public class GamePane extends Pane {
                 velocity = REVERSE_VELOCITY;
                 if (result.getValue()) {
                     // double bounce if bouncyPlatform
-                    velocity = REVERSE_VELOCITY * 2;
+                    velocity = REVERSE_VELOCITY * 1.5;
                 }
             }
         }

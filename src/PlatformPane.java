@@ -63,7 +63,7 @@ public class PlatformPane extends Pane {
 
     public double makeStationaryPlatform(double previousX) {
         platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(50) - 25;
+        platformY = platformY - ran.nextInt(40) - 25;
         Rectangle stationaryPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
         getChildren().add(stationaryPlatform);
         stationaryPlatforms.add(stationaryPlatform);
@@ -72,7 +72,7 @@ public class PlatformPane extends Pane {
 
     public double makeDisappearingPlatform(double previousX) {
         platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(50) - 25;
+        platformY = platformY - ran.nextInt(40) - 25;
         Rectangle disappearingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
         getChildren().add(disappearingPlatform);
         disappearingPlatforms.add(disappearingPlatform);
@@ -82,7 +82,7 @@ public class PlatformPane extends Pane {
 
     public double makeMovingPlatform(double previousX) {
         platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(50) - 25;
+        platformY = platformY - ran.nextInt(40) - 25;
         Rectangle movingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
         getChildren().add(movingPlatform);
         movingPlatforms.add(movingPlatform);
@@ -92,7 +92,7 @@ public class PlatformPane extends Pane {
 
     public double makeBouncyPlatform(double previousX) {
         platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(50) - 25;
+        platformY = platformY - ran.nextInt(40) - 10;
         Rectangle bouncyPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
         getChildren().add(bouncyPlatform);
         bouncyPlatforms.add(bouncyPlatform);
@@ -123,9 +123,9 @@ public class PlatformPane extends Pane {
     public double generatePlatformX(double previousX) {
         int direction = ran.nextInt(2);
         if (direction == 0) {
-            platformX = previousX - ran.nextInt(50) - 100; // moves left 50-100
+            platformX = previousX - ran.nextInt(50) - 25; // moves left 25-75
         } else if (direction == 1) {
-            platformX = previousX + ran.nextInt(50) + 50; // moves right 50-100
+            platformX = previousX + ran.nextInt(50) + 25; // moves right 25-75
         }
         if (platformX + PLATFORM_WIDTH >= PANE_WIDTH) {
             platformX = PANE_WIDTH - PLATFORM_WIDTH;
