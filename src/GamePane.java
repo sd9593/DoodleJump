@@ -2,11 +2,13 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 public class GamePane extends Pane {
@@ -49,13 +51,20 @@ public class GamePane extends Pane {
     public void fall() {
         velocity = velocity + GRAVITY * DURATION;
         doodleY = doodleY + velocity * DURATION;
-        if (doodleY < getHeight() / 2) {
+        if (doodleY > getHeight()) {
+            doodleAnimation.stop();
+            setOnKeyPressed(null);
+            Label gameOver = new Label("Game Over");
+            gameOver.setFont(new Font("Arial", 50));
+            getChildren().add(gameOver);
+        } else if (doodleY < getHeight() / 2) {
             doodle.setY(getHeight() / 2);
             platformPane.scroll(doodleY - getHeight() / 2);
             doodleY = getHeight() / 2;
         } else {
             doodle.setY(doodleY);
         }
+
     }
 
     public void jump() {
