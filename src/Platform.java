@@ -49,11 +49,11 @@ public abstract class Platform extends Rectangle {
         return PLATFORM_HEIGHT;
     }
 
-    public double getPaneHeight() {
-        return PANE_HEIGHT;
-    }
-
     public double getPaneWidth() {
         return PANE_WIDTH;
+    }
+
+    public double getPaneHeight() {
+        return PANE_HEIGHT;
     }
 }

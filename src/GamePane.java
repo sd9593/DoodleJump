@@ -28,32 +28,32 @@ public class GamePane extends Pane {
     private static final double REVERSE_VELOCITY = -150;
     private double velocity = 0;
 
-    Timeline doodleAnimation;
-    PlatformPane platformPane = new PlatformPane();
+    private Timeline animation;
+    private PlatformPane platformPane = new PlatformPane();
 
     public GamePane() {
         doodle = new Rectangle(doodleX, doodleY, DOODLE_WIDTH, DOODLE_HEIGHT);
         doodle.setFill(Color.GREEN);
         getChildren().addAll(doodle, platformPane);
-        doodleAnimation = new Timeline(new KeyFrame(new Duration(DURATION * GRAVITY * 10), e -> {
+        animation = new Timeline(new KeyFrame(new Duration(DURATION * GRAVITY * 10), e -> {
             fall();
             jump();
             platformPane.movePlatforms();
         }));
         // DURTION * GRAVITY * 10 allows better speed for falling
-        doodleAnimation.setCycleCount(Timeline.INDEFINITE);
+        animation.setCycleCount(Timeline.INDEFINITE);
     }
 
     // animation begins on enter key pressed
     public void play() {
-        doodleAnimation.play();
+        animation.play();
     }
 
     public void fall() {
         velocity = velocity + GRAVITY * DURATION;
         doodleY = doodleY + velocity * DURATION;
         if (doodleY > getHeight()) {
-            doodleAnimation.stop();
+            animation.stop();
             setOnKeyPressed(null);
             Label gameOver = new Label("Game Over");
             gameOver.setFont(new Font("Arial", 50));

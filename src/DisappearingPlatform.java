@@ -2,7 +2,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class DisappearingPlatform extends Platform {
-    Rectangle disappearingPlatform;
+    private Rectangle disappearingPlatform;
 
     public DisappearingPlatform(double platformX, double platformY) {
         platformX = generatePlatformX();

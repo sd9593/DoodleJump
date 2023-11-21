@@ -2,7 +2,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class BouncyPlatform extends Platform {
-    Rectangle bouncyPlatform;
+    private Rectangle bouncyPlatform;
 
     public BouncyPlatform(double platformX, double platformY) {
         platformX = generatePlatformX();

@@ -2,7 +2,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class MovingPlatform extends Platform {
-    Rectangle movingPlatform;
+    private Rectangle movingPlatform;
     private int dx;
 
     public MovingPlatform(double platformX, double platformY) {
