@@ -46,7 +46,7 @@ public class PlatformPane extends Pane {
                 platform = new BouncyPlatform(platformX, platformY);
                 break;
             default:
-                platform = new DisappearingPlatform(platformX, platformY);
+                platform = new MovingPlatform(platformX, platformY);
                 break;
         }
         platformX = platform.getRectangle().getX();
@@ -54,6 +54,14 @@ public class PlatformPane extends Pane {
 
         getChildren().add(platform.getRectangle());
         platforms.add(platform);
+    }
+
+    public void movePlatforms() {
+        for (Platform platform : platforms) {
+            if (platform instanceof MovingPlatform) {
+                ((MovingPlatform) platform).move();
+            }
+        }
     }
 
     // pair is intersected, extraBounce
