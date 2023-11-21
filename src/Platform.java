@@ -14,17 +14,16 @@ public abstract class Platform extends Rectangle {
 
     // determines coordinates value of most recently generated platform
     protected double previousX = platformX;
-    // protected double previousY = platformY;
 
     // to be used to determine new platform position
     protected Random ran = new Random();
 
     public Platform() {
-
+        platformX = generatePlatformX();
+        platformY = platformY - ran.nextInt(50) - 25; // moves up 25-75
     }
 
     public double generatePlatformX() {
-        // System.out.println("X " + previousX);
         int direction = ran.nextInt(2);
         if (direction == 0) {
             platformX = previousX - ran.nextInt(50) - 50; // moves left 50-100
@@ -39,12 +38,6 @@ public abstract class Platform extends Rectangle {
         previousX = platformX;
         return platformX;
     }
-
-    // public double generatePlatformY() {
-    // System.out.println("Y " + platformY);
-    // platformY = platformY - ran.nextInt(50); // moves up 0-50
-    // return platformY;
-    // }
 
     public abstract Rectangle getRectangle();
 

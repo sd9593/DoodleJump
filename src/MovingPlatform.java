@@ -6,8 +6,6 @@ public class MovingPlatform extends Platform {
     private int dx;
 
     public MovingPlatform(double platformX, double platformY) {
-        super.platformX = platformX;
-        super.platformY = platformY;
         platformX = generatePlatformX();
         platformY = platformY - ran.nextInt(50) - 25; // moves up 25-75
         movingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);

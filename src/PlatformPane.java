@@ -73,7 +73,7 @@ public class PlatformPane extends Pane {
                         && doodle.getY() >= platform.getRectangle().getY() - 4 * platform.getPlatformHeight()) {
                     // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
                     if (platform instanceof DisappearingPlatform) {
-                        getChildren().remove(platform);
+                        getChildren().remove(platform.getRectangle());
                         platforms.remove(platform);
                     }
                     if (platform instanceof BouncyPlatform) {
