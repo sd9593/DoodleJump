@@ -10,176 +10,66 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
 public class PlatformPane extends Pane {
-    private ArrayList<Rectangle> stationaryPlatforms = new ArrayList<>();
-    private ArrayList<Rectangle> disappearingPlatforms = new ArrayList<>();
-    private ArrayList<Rectangle> movingPlatforms = new ArrayList<>();
-    private ArrayList<Rectangle> bouncyPlatforms = new ArrayList<>();
+    private ArrayList<Platform> platforms = new ArrayList<>();
 
-    private static final int PANE_WIDTH = 500;
-    private static final int PANE_HEIGHT = 700;
+    private static final int NUM_PLATFORMS = 20;
+    protected double platformX = 250;
+    protected double platformY = 600;
 
-    // universal platform properties
-    private static final double PLATFORM_WIDTH = 50;
-    private static final double PLATFORM_HEIGHT = 10;
-    private double platformX = 250;
-    private double platformY = 600;
+    protected Random ran = new Random();
 
     // Property type allows for binding for display
     IntegerProperty scoreProperty = new SimpleIntegerProperty();
 
-    // determines x value of most recently generated platform
-    private double previousX = platformX;
-
-    // determines how fast to move moving platforms
-    private double speed = 20;
-
-    // to be used to determine new platform position
-    private Random ran = new Random();
-
-    // stationary platform attributes
-    private static final int NUM_PLATFORMS = 10;
-
     public PlatformPane() {
-        Rectangle initialStationaryPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-        getChildren().add(initialStationaryPlatform);
-        stationaryPlatforms.add(initialStationaryPlatform);
+        Platform initialStationaryPlatform = new StationaryPlatform(platformX, platformY);
+        platformX = initialStationaryPlatform.getRectangle().getX();
+        platformY = initialStationaryPlatform.getRectangle().getY();
+        getChildren().add(initialStationaryPlatform.getRectangle());
+        platforms.add(initialStationaryPlatform);
         for (int i = 0; i < NUM_PLATFORMS; i++) {
             generatePlatforms();
         }
     }
 
     public void generatePlatforms() {
-        switch (ran.nextInt(4)) {
+        Platform platform;
+        int choice = ran.nextInt(4);
+        System.out.println(choice);
+        switch (choice) {
             case 0:
-                previousX = makeStationaryPlatform(previousX);
+                platform = new DisappearingPlatform(platformX, platformY);
+                break;
             case 1:
-                previousX = makeDisappearingPlatform(previousX);
+                platform = new StationaryPlatform(platformX, platformY);
+                break;
             case 2:
-                previousX = makeBouncyPlatform(previousX);
+                platform = new StationaryPlatform(platformX, platformY);
+                break;
             default:
-                previousX = makeMovingPlatform(previousX);
+                platform = new DisappearingPlatform(platformX, platformY);
+                break;
         }
-    }
+        platformX = platform.getRectangle().getX();
+        platformY = platform.getRectangle().getY();
 
-    public double makeStationaryPlatform(double previousX) {
-        platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(40) - 25;
-        Rectangle stationaryPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-        getChildren().add(stationaryPlatform);
-        stationaryPlatforms.add(stationaryPlatform);
-        return platformX;
-    }
-
-    public double makeDisappearingPlatform(double previousX) {
-        platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(40) - 25;
-        Rectangle disappearingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-        getChildren().add(disappearingPlatform);
-        disappearingPlatforms.add(disappearingPlatform);
-        disappearingPlatform.setFill(Color.RED);
-        return platformX;
-    }
-
-    public double makeMovingPlatform(double previousX) {
-        platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(40) - 25;
-        Rectangle movingPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-        getChildren().add(movingPlatform);
-        movingPlatforms.add(movingPlatform);
-        movingPlatform.setFill(Color.BLUE);
-        return platformX;
-    }
-
-    public double makeBouncyPlatform(double previousX) {
-        platformX = generatePlatformX(previousX);
-        platformY = platformY - ran.nextInt(40) - 10;
-        Rectangle bouncyPlatform = new Rectangle(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-        getChildren().add(bouncyPlatform);
-        bouncyPlatforms.add(bouncyPlatform);
-        bouncyPlatform.setFill(Color.GREEN);
-        return platformX;
-    }
-
-    public void movePlatforms() {
-
-        // for (Rectangle movingPlatform : movingPlatforms) {
-        // // movingPlatform.setX(movingPlatform.getX() + speed);
-
-        // // if (ran.nextInt(2) == 0) {
-        // // movingPlatform.setX(movingPlatform.getX() + speed);
-        // // } else {
-        // // movingPlatform.setX(movingPlatform.getX() - speed);
-        // // }
-
-        // // if (movingPlatform.getX() <= 0) {
-        // // movingPlatform.setX(movingPlatform.getX() + speed);
-        // // }
-        // // if (movingPlatform.getX() + PLATFORM_WIDTH > PANE_WIDTH) {
-        // // movingPlatform.setX(movingPlatform.getX() - speed);
-        // // }
-        // }
-    }
-
-    public double generatePlatformX(double previousX) {
-        int direction = ran.nextInt(2);
-        if (direction == 0) {
-            platformX = previousX - ran.nextInt(50) - 25; // moves left 25-75
-        } else if (direction == 1) {
-            platformX = previousX + ran.nextInt(50) + 25; // moves right 25-75
-        }
-        if (platformX + PLATFORM_WIDTH >= PANE_WIDTH) {
-            platformX = PANE_WIDTH - PLATFORM_WIDTH;
-        } else if (platformX < 0) {
-            platformX = 0;
-        }
-        return platformX;
+        getChildren().add(platform.getRectangle());
+        platforms.add(platform);
     }
 
     // pair is intersected, extraBounce
     public Pair<Boolean, Boolean> intersects(Rectangle doodle) {
-        for (Rectangle disappearingPlatform : disappearingPlatforms) {
-            if (disappearingPlatform.intersects(doodle.getBoundsInLocal())) {
-                if (doodle.getX() >= disappearingPlatform.getX() - doodle.getWidth()
-                        && doodle.getX() <= disappearingPlatform.getX() +
-                                PLATFORM_WIDTH
-                        && doodle.getY() >= disappearingPlatform.getY() - 4 * PLATFORM_HEIGHT) {
+        for (Platform platform : platforms) {
+            if (platform.getRectangle().intersects(doodle.getBoundsInLocal())) {
+                if (doodle.getX() >= platform.getRectangle().getX() - doodle.getWidth()
+                        && doodle.getX() <= platform.getRectangle().getX() + platform.getPlatformWidth()
+                        && doodle.getY() >= platform.getRectangle().getY() - 4 * platform.getPlatformHeight()) {
                     // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
-                    getChildren().remove(disappearingPlatform);
-                    disappearingPlatforms.remove(disappearingPlatform);
+                    if (platform instanceof DisappearingPlatform) {
+                        getChildren().remove(platform);
+                        platforms.remove(platform);
+                    }
                     return new Pair(true, false);
-                }
-            }
-        }
-        for (Rectangle stationaryPlatform : stationaryPlatforms) {
-            if (stationaryPlatform.intersects(doodle.getBoundsInLocal())) {
-                if (doodle.getX() >= stationaryPlatform.getX() - doodle.getWidth()
-                        && doodle.getX() <= stationaryPlatform.getX() +
-                                PLATFORM_WIDTH
-                        && doodle.getY() >= stationaryPlatform.getY() - 4 * PLATFORM_HEIGHT) {
-                    // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
-                    return new Pair(true, false);
-                }
-            }
-        }
-        for (Rectangle movingPlatform : movingPlatforms) {
-            if (movingPlatform.intersects(doodle.getBoundsInLocal())) {
-                if (doodle.getX() >= movingPlatform.getX() - doodle.getWidth()
-                        && doodle.getX() <= movingPlatform.getX() +
-                                PLATFORM_WIDTH
-                        && doodle.getY() >= movingPlatform.getY() - 4 * PLATFORM_HEIGHT) {
-                    // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
-                    return new Pair(true, false);
-                }
-            }
-        }
-        for (Rectangle bouncyPlatform : bouncyPlatforms) {
-            if (bouncyPlatform.intersects(doodle.getBoundsInLocal())) {
-                if (doodle.getX() >= bouncyPlatform.getX() - doodle.getWidth()
-                        && doodle.getX() <= bouncyPlatform.getX() +
-                                PLATFORM_WIDTH
-                        && doodle.getY() >= bouncyPlatform.getY() - 4 * PLATFORM_HEIGHT) {
-                    // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
-                    return new Pair(true, true);
                 }
             }
         }
@@ -188,42 +78,13 @@ public class PlatformPane extends Pane {
 
     public void scroll(double scrollAmount) {
         // move each platform up by the given amount
-        for (Rectangle stationaryPlatform : stationaryPlatforms) {
-            stationaryPlatform.setY(stationaryPlatform.getY() - scrollAmount);
+        for (Platform platform : platforms) {
+            platform.getRectangle().setY(platform.getRectangle().getY() - scrollAmount);
             // subtracting since scrollAmount will be negative
-            if (stationaryPlatform.getY() > PANE_HEIGHT) {
-                getChildren().remove(stationaryPlatform);
-                stationaryPlatforms.remove(stationaryPlatform);
-                scoreProperty.setValue(scoreProperty.getValue() + 2);
-                generatePlatforms();
-            }
-        }
-        for (Rectangle disappearingPlatform : disappearingPlatforms) {
-            disappearingPlatform.setY(disappearingPlatform.getY() - scrollAmount);
-            // subtracting since scrollAmount will be negative
-            if (disappearingPlatform.getY() > PANE_HEIGHT) {
-                getChildren().remove(disappearingPlatform);
-                disappearingPlatforms.remove(disappearingPlatform);
-                scoreProperty.setValue(scoreProperty.getValue() + 2);
-                generatePlatforms();
-            }
-        }
-        for (Rectangle movingPlatform : movingPlatforms) {
-            movingPlatform.setY(movingPlatform.getY() - scrollAmount);
-            // subtracting since scrollAmount will be negative
-            if (movingPlatform.getY() > PANE_HEIGHT) {
-                getChildren().remove(movingPlatform);
-                movingPlatforms.remove(movingPlatform);
-                scoreProperty.setValue(scoreProperty.getValue() + 1);
-                generatePlatforms();
-            }
-        }
-        for (Rectangle bouncyPlatform : bouncyPlatforms) {
-            bouncyPlatform.setY(bouncyPlatform.getY() - scrollAmount);
-            // subtracting since scrollAmount will be negative
-            if (bouncyPlatform.getY() > PANE_HEIGHT) {
-                getChildren().remove(bouncyPlatform);
-                bouncyPlatforms.remove(bouncyPlatform);
+            if (platform.getRectangle().getY() > platform.getPaneHeight()) {
+                getChildren().remove(platform);
+                // ArrayList<Platform> iter = ((Rectangle)platform.iterator();
+                platforms.remove(platform);
                 scoreProperty.setValue(scoreProperty.getValue() + 1);
                 generatePlatforms();
             }
@@ -233,4 +94,5 @@ public class PlatformPane extends Pane {
     public IntegerProperty getScoreProperty() {
         return scoreProperty;
     }
+
 }

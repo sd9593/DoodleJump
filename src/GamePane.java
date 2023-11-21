@@ -38,7 +38,7 @@ public class GamePane extends Pane {
         doodleAnimation = new Timeline(new KeyFrame(new Duration(DURATION * GRAVITY * 10), e -> {
             fall();
             jump();
-            platformPane.movePlatforms();
+            // platformPane.movePlatforms();
         }));
         // DURTION * GRAVITY * 10 allows better speed for falling
         doodleAnimation.setCycleCount(Timeline.INDEFINITE);
