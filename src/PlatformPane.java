@@ -35,7 +35,6 @@ public class PlatformPane extends Pane {
     public void generatePlatforms() {
         Platform platform;
         int choice = ran.nextInt(4);
-        System.out.println(choice);
         switch (choice) {
             case 0:
                 platform = new DisappearingPlatform(platformX, platformY);
@@ -44,7 +43,7 @@ public class PlatformPane extends Pane {
                 platform = new StationaryPlatform(platformX, platformY);
                 break;
             case 2:
-                platform = new StationaryPlatform(platformX, platformY);
+                platform = new BouncyPlatform(platformX, platformY);
                 break;
             default:
                 platform = new DisappearingPlatform(platformX, platformY);
@@ -68,6 +67,9 @@ public class PlatformPane extends Pane {
                     if (platform instanceof DisappearingPlatform) {
                         getChildren().remove(platform);
                         platforms.remove(platform);
+                    }
+                    if (platform instanceof BouncyPlatform) {
+                        return new Pair(true, true);
                     }
                     return new Pair(true, false);
                 }
