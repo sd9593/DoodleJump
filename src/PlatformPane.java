@@ -73,16 +73,9 @@ public class PlatformPane extends Pane {
             if (platform.getRectangle().intersects(doodle.getBoundsInLocal())) {
                 if (doodle.getX() >= platform.getRectangle().getX() - doodle.getWidth()
                         && doodle.getX() <= platform.getRectangle().getX() + platform.getPlatformWidth()
-                        && doodle.getY() >= platform.getRectangle().getY() - 4 * platform.getPlatformHeight()) {
-                    // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
+                        && doodle.getY() >= platform.getRectangle().getY() - doodle.getHeight()) {
                     if (platform instanceof DisappearingPlatform) {
                         getChildren().remove(platform.getRectangle());
-                        // Iterator<Platform> iter = platforms.iterator();
-                        // while (iter.hasNext()) {
-                        // Platform curr = iter.next();
-                        // platforms.remove(curr);
-                        // break;
-                        // }
                         platforms.remove(platform);
                     }
                     if (platform instanceof BouncyPlatform) {
@@ -98,20 +91,17 @@ public class PlatformPane extends Pane {
     // creates illusion of upward doodle movement
     public void scroll(double scrollAmount) {
         // move each platform up by the given amount
-        for (Platform platform : platforms) {
+        Iterator<Platform> iter = platforms.iterator();
+        while (iter.hasNext()) {
+            Platform platform = iter.next();
             platform.getRectangle().setY(platform.getRectangle().getY() - scrollAmount);
             // subtracting since scrollAmount will be negative
             if (platform.getRectangle().getY() > platform.getPaneHeight()) {
+                iter.remove();
                 getChildren().remove(platform);
-                // Iterator<Platform> iter = platforms.iterator();
-                // while (iter.hasNext()) {
-                // Platform curr = iter.next();
-                // platforms.remove(curr);
-                // break;
-                // }
-                platforms.remove(platform);
                 scoreProperty.setValue(scoreProperty.getValue() + 1);
                 generatePlatforms();
+                break;
             }
         }
     }
