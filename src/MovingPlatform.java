@@ -17,6 +17,8 @@ public class MovingPlatform extends Platform {
         return movingPlatform;
     }
 
+    // performs moving function for each moving platform based on current direction
+    // (dx)
     public void move() {
         if (movingPlatform.getX() <= 0) {
             dx *= -1;

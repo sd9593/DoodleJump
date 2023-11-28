@@ -21,6 +21,7 @@ public class PlatformPane extends Pane {
     IntegerProperty scoreProperty = new SimpleIntegerProperty();
 
     public PlatformPane() {
+        // initial platform should be stationary
         Platform initialStationaryPlatform = new StationaryPlatform(platformX, platformY);
         platformX = initialStationaryPlatform.getRectangle().getX();
         platformY = initialStationaryPlatform.getRectangle().getY();
@@ -31,6 +32,7 @@ public class PlatformPane extends Pane {
         }
     }
 
+    // randomly decide which type of platform to create
     public void generatePlatforms() {
         Platform platform;
         int choice = ran.nextInt(4);
@@ -55,6 +57,7 @@ public class PlatformPane extends Pane {
         platforms.add(platform);
     }
 
+    // triggers movement of moving platforms
     public void movePlatforms() {
         for (Platform platform : platforms) {
             if (platform instanceof MovingPlatform) {
@@ -63,6 +66,7 @@ public class PlatformPane extends Pane {
         }
     }
 
+    // determines if the doodle intersects any platform from the top
     // pair is intersected, extraBounce
     public Pair<Boolean, Boolean> intersects(Rectangle doodle) {
         for (Platform platform : platforms) {
@@ -91,6 +95,7 @@ public class PlatformPane extends Pane {
         return new Pair(false, false);
     }
 
+    // creates illusion of upward doodle movement
     public void scroll(double scrollAmount) {
         // move each platform up by the given amount
         for (Platform platform : platforms) {

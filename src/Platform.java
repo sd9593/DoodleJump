@@ -23,6 +23,8 @@ public abstract class Platform extends Rectangle {
         platformY = platformY - ran.nextInt(50) - 25; // moves up 25-75
     }
 
+    // randomly generates new x coordinate based on given range and previous x
+    // coordinate
     public double generatePlatformX() {
         int direction = ran.nextInt(2);
         if (direction == 0) {
@@ -39,6 +41,7 @@ public abstract class Platform extends Rectangle {
         return platformX;
     }
 
+    // allows platforms to be added to screen as rectangles
     public abstract Rectangle getRectangle();
 
     public double getPlatformWidth() {
