@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import javafx.beans.property.IntegerProperty;
@@ -10,7 +11,7 @@ import javafx.util.Pair;
 public class PlatformPane extends Pane {
     private ArrayList<Platform> platforms = new ArrayList<>();
 
-    private static final int NUM_PLATFORMS = 20;
+    private static final int NUM_PLATFORMS = 50;
     protected double platformX = 250;
     protected double platformY = 600;
 
@@ -72,6 +73,12 @@ public class PlatformPane extends Pane {
                     // 4 * PLATFORM_HEIGHT prevents dipping below platform before jumping
                     if (platform instanceof DisappearingPlatform) {
                         getChildren().remove(platform.getRectangle());
+                        // Iterator<Platform> iter = platforms.iterator();
+                        // while (iter.hasNext()) {
+                        // Platform curr = iter.next();
+                        // platforms.remove(curr);
+                        // break;
+                        // }
                         platforms.remove(platform);
                     }
                     if (platform instanceof BouncyPlatform) {
@@ -91,7 +98,12 @@ public class PlatformPane extends Pane {
             // subtracting since scrollAmount will be negative
             if (platform.getRectangle().getY() > platform.getPaneHeight()) {
                 getChildren().remove(platform);
-                // ArrayList<Platform> iter = ((Rectangle)platform.iterator();
+                // Iterator<Platform> iter = platforms.iterator();
+                // while (iter.hasNext()) {
+                // Platform curr = iter.next();
+                // platforms.remove(curr);
+                // break;
+                // }
                 platforms.remove(platform);
                 scoreProperty.setValue(scoreProperty.getValue() + 1);
                 generatePlatforms();
